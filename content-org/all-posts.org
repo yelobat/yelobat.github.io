@@ -1,8 +1,10 @@
 #+hugo_base_dir: ../
+#+hugo_front_matter: :math true
 
-* DONE My first post :tag1:@category1:
+* DONE A work in progress.
 :PROPERTIES:
-:EXPORT_FILE_NAME: my-first-post
-:EXPORT_DATE: 2021-09-14
+:EXPORT_FILE_NAME: a-work-in-progress
+:EXPORT_DATE: 2025-09-22
 :END:
-First post.
+
+This site is a work in progress.

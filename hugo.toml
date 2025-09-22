@@ -1,7 +1,7 @@
-baseURL = 'https://example.org/'
+baseURL = 'https://yelobat.github.io/'
 languageCode = 'en-us'
-title = 'yelobat'
-theme = 'archie'
+title = 'yelobat - Homepage'
+theme = 'nostyleplease'
 
 [markup.goldmark.renderer]
     unsafe = true
@@ -9,3 +9,4 @@ theme = 'archie'
 [caches]
     [caches.images]
         dir = ':cacheDir/images'
+
