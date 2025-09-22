@@ -1,0 +1,11 @@
+baseURL = 'https://example.org/'
+languageCode = 'en-us'
+title = 'yelobat'
+theme = 'archie'
+
+[markup.goldmark.renderer]
+    unsafe = true
+
+[caches]
+    [caches.images]
+        dir = ':cacheDir/images'
