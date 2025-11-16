@@ -1,10 +1,640 @@
 #+hugo_base_dir: ../
-#+hugo_front_matter: :math true
+#+hugo_tags: algorithm, cses, recursion, colatz
 
-* DONE A work in progress.
+* TODO Game Theory.
 :PROPERTIES:
-:EXPORT_FILE_NAME: a-work-in-progress
-:EXPORT_DATE: 2025-09-22
+:EXPORT_AUTHOR: yelobat
+:EXPORT_FILE_NAME: game-theory
+:EXPORT_DATE: 2025-09-23
+:EXPORT_OPTIONS: toc:t
 :END:
 
-This site is a work in progress.
+** Introduction
+
+Game Theory is one of the most fascinating things that I have ever come across
+during my journey studying Computer Science. It is so fascinating that I created
+this site just to talk about it.
+
+** What is Game Theory?
+
+Game Theory is the study of rational behaviour in the context of \(N\)-player
+games. In most cases, studying \(2\)-player games is the most common and
+is also easier to discuss, hence we will limit ourselves to just \(2\) players
+in our games.
+
+Game Theory defines the mathematical notation required to model what it means to
+be rational when playing any given game. It gives us the tools to be able to say
+whether a particular player is playing their best possible move.
+
+** What kind of games are we talking about?
+
+Any game really. This can range from simple games like Tic-Ta-Toe (we will see
+later) to more complex games like Chess. However, it can be used to analyse real
+world situations too.
+
+** Notation
+
+Before we can begin to look at any games, we need to first discuss the notation used
+in Game Theory. First, we have the vector:
+
+*** Vector
+
+A vector is a list of numbers and looks like the following:
+
+\begin{align}
+\begin{pmatrix}
+V_{1} \\
+V_{2} \\
+\vdots \\
+V_{N}
+\end{pmatrix}
+\end{align}
+
+The parameter \(N\) represents the size of the vector, with said vector called
+\(V\). The length of the vector \(V\) is denoted as \(\lVert V \lVert\); note that the size
+and the length of a vector are different quantities:
+
+- The size is the number of components (numbers) that a vector has.
+- The length of a vector represents the distance.
+
+The way we choose to measure distance is arbitrary and can change depending your
+requirements, but in our case we use the following definition:
+
+\begin{align}
+\lVert V \lVert = \sqrt{\sum_{i = 1}^{N} (V_{i}^{2})}
+\end{align}
+
+Which most of you will know as the Pythagorean theorem.
+
+**** Operations
+
+There are various operations that can be operated on and between vectors and
+these operations exhibit various useful properties.
+
+***** Scalar Product
+
+With vectors, you can perform TODO
+
+***** Normalization
+
+Normalization means to be make the vector's length to be equal to \(1\). This
+can be done by dividing by the length of the vector \(V\):
+
+\begin{align}
+\hat{V} = \frac{V}{\lVert V \lVert}
+\end{align}
+
+The \(\hat{}\) symbol means the vector is normalized, and the division happens
+across all the components in the vector. We can see how this makes the length
+\(1\) by substituting \(\hat{V}\) into the length equation:
+
+\begin{align}
+\lVert {\hat{V}} \lVert
+= \sqrt{\sum_{i = 1}^{N} (\frac{V_{i}}{\lVert V \lVert})^{2}}
+= \frac{1}{\lVert V \lVert} \sqrt{\sum_{i = 1}^{N} (V_{i}^{2})}
+= \frac{\lVert V \lVert}{\lVert V \lVert} = 1
+\end{align}
+
+And hence we have created a vector with length equal to \(1\), these vectors are
+also referred to as unit vectors.
+
+***** Dot Product
+
+The dot product is an operation that occurs between \(2\) vectors and is defined
+as follows:
+
+\begin{align}
+A \cdot B = \sum_{i}^{N} (A_{i} \times B_{i})
+\end{align}
+
+The dot product may seem like just another quantity, but it has the useful property
+in that it represents the cosine between the two vectors:
+
+\begin{align}
+A \cdot B = \lVert A \lVert \cdot \lVert B \lVert \cdot \cos (\theta)
+\end{align}
+
+And from this we can say that the angle between two vectors is:
+
+\begin{align}
+\theta = \cos^{-1} (\frac{A \cdot B}{\lVert A \lVert \cdot \lVert B \lVert })
+\end{align}
+
+It's also important to note that the dot product is a commutative operation:
+
+\begin{align}
+A \cdot B = B \cdot A
+\end{align}
+
+***** Cross Product
+
+The cross product is an operation that also occurs between \(2\) vectors and is
+defined as follows:
+
+\begin{align}
+n = A \times B =
+\begin{pmatrix}
+A_{2} \cdot B_{3} - A_{3} \cdot B_{2} \\
+A_{3} \cdot B_{1} - A_{1} \cdot B_{3} \\
+A_{1} \cdot B_{2} - A_{2} \cdot B_{1}
+\end{pmatrix}
+\end{align}
+
+Note that we are only concerned with this operation when discussing 3D vectors
+for the sake of this example and for the rest of the post.
+
+The cross product creates a new vector from the two vectors called \(n\). This
+new vector has the useful property in that it is perpendicular to the two
+vectors involved.
+
+The requirement for this to hold true however is that \(A\) and \(B\) must be
+linearly independent. For two vectors to be linearly independent, it means that
+there exists no solution to the following equation:
+
+\begin{align}
+a \cdot \begin{pmatrix} A_{1} \\ A_{2} \\ A_{3} \end{pmatrix} + b \cdot \begin{pmatrix} B_{1} \\ B_{2} \\ B_{3} \end{pmatrix} =
+\begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix}
+\end{align}
+
+Unless both \(a\) and \(b\) are equal to \(0\). These solutions are referred to
+as non-trivial solutions.
+
+Similar to the dot product, it also has a relationship to TODO
+
+**** Vector Examples
+
+Okay, now let's look at some examples of some vectors:
+
+\begin{align}
+\mathbf{V_{1}} &= \begin{pmatrix} 0 \\ 1 \\ 0 \end{pmatrix} &
+\mathbf{V_{2}} &= \begin{pmatrix} 5 \\ -2 \end{pmatrix} &
+\mathbf{V_{3}} &= \begin{pmatrix} 0 \\ 0 \\ 0 \end{pmatrix} &
+\end{align}
+
+Let's work through the following questions to better understand how vectors work:
+
+- What is the size of the vector \(V_{1}, V_{2}, V_{3}\)?
+- What is the length of the vector \(V_{1}, V_{2}, V_{3}\)?
+- What is the dot product between \(V_{1}\) and \(V_{3}\)?
+- What is the cross product between \(V_{2}\) and itself?
+
+#+begin_export html
+<!-- Step 1: include our secure javascript file -->
+<script src="https://www.desmos.com/api/v1.11/calculator.js?apiKey=daed7dd8e0fb40319963c7fb4c36a73c"></script>
+
+<!-- Step 2: add an element to the page -->
+<div id="calculator" style="width: 600px; height: 400px;"></div>
+
+<!-- Step 3: add the following lines of javascript -->
+<script>
+    var elt = document.getElementById('calculator');
+    var calculator = Desmos.GraphingCalculator(elt);
+</script>
+#+end_export
+
+**** Standard basis vectors
+
+*** Matrix
+
+A matrix is represented as follows:
+
+\begin{align}
+\begin{pmatrix}
+A_{1, 1} & \cdots & A_{N, 1} \\
+A_{1, 2} & \cdots & A_{N, 2} \\
+\vdots & \ddots & \vdots \\
+A_{1, M} & \cdots & A_{N, M} \\
+\end{pmatrix}
+\end{align}
+
+This represents a matrix that has \(N\) rows and \(M\) columns.
+
+*** Nash Equilibrium
+
+Let's look at a simple, yet famous game that is commonly discussed
+in Game Theory, this game is called the Prisoner's Dilemma. Let's say
+you and your friend go to prison. Each given 10 year sentences for the
+crime you committed. However, if you defy you friend you can shave 5 years
+of your sentence for helping the police.
+
+\begin{align}
+\begin{pmatrix}
+(0, 0) & (5, -5) \\
+(-5, 5) & (2, 2)
+\end{pmatrix}
+\end{align}
+
+Thank you for reading.
+
+* TODO Advent of Code 2025
+:PROPERTIES:
+:EXPORT_AUTHOR: yelobat
+:EXPORT_FILE_NAME: advent-of-code-2025
+:EXPORT_DATE: 2025-09-24
+:EXPORT_OPTIONS: toc:t
+:END:
+
+** Introduction
+
+I haven't participated in Advent of Code since around 2022 I think, and I used
+to actively participate in competitive programming until I stopped due to heavy
+burnout. However, I decided that this year I wanted to start getting back into
+competitive programming again.
+
+The way I wanted to kick start that journey is by participating in Advent of
+Code 2025.
+
+** Language of choice
+
+I would usually pick a language that I am fluent in, which in this case is C,
+but recently I have gravitated towards using Rust as my daily drivers for pretty
+much everything. This year I wanted to make a conscious effort to also make
+Emacs Lisp part of my toolkit due to the extensive use of Emacs to do all of my
+work, including writing this post, which is written in an org-mode file and
+exported via [[https://github.com/kaushalmodi/ox-hugo][ox-hugo]].
+
+So, this year I decided to choose Emacs Lisp as my language of choice.
+
+** aocel.el
+
+Before I began my practice I wanted to write a tool that could help solve
+problems faster, part of the fun is attempting to get somewhere on the
+leaderboard.
+
+This gave me the idea to write a package called [[https://github.com/yelobat/aocel][aocel.el]] An Emacs package that
+provides a series of functions for making advent of code participation easier.
+It does this by doing the following things:
+
+*** Input retrieval
+
+The aocel.el package provides a function called aocel-solve. This function takes
+the year and day of that particular problem, allows you to pass a function that
+solves that particular problem. We will look later on what the function
+signature should be to be suitable for the 'aocel-solve' function.
+
+The aocel-solve function will retrieve the input and cache it away for later (if
+multiple attempts are made on a particular problem). The solution that your
+problem obtains should be the return value of the provided function so that
+aocel-solve can work with that answer correctly.
+
+** Solving Year 2024 Day 1
+
+*** Description
+
+Let's look at day 1 for the 2024 series of problems to test out this package.
+You can find the description of this problem here
+https://adventofcode.com/2024/day/1.
+
+To put it simply, we are required to take a list of numbers in the following
+format as input to our program:
+
+#+BEGIN_SRC text
+3   4
+4   3
+2   5
+1   3
+3   9
+3   3
+#+END_SRC
+
+Then we are required to pair each number with their respective rank (from lowest
+to highest) and take their absolute difference, and with each of these values,
+we sum them all up to get our answer. So for the example provided here, we can
+sort both lists:
+
+#+BEGIN_SRC text
+1   3
+2   3
+3   3
+3   4
+3   5
+4   9
+#+END_SRC
+
+Then take the absolute difference between each pair of numbers:
+#+BEGIN_SRC text
+|1 - 3| = 2
+|2 - 3| = 1
+|3 - 3| = 0
+|3 - 4| = 1
+|3 - 5| = 2
+|4 - 9| = 5
+#+END_SRC
+
+Sum them all up and then we get a total of =11=, which is the correct answer for
+this example.
+
+*** Solution
+
+Now that we understand what we are being asked to do, we can implement our solution
+and use the 'aocel-solve' function to apply our function the problem's input.
+
+So, let's assume we have the entire input data as input as a string, we can test
+this by writing a function like this:
+
+#+BEGIN_SRC text
+(defun solution (input)
+  (message input))
+#+END_SRC
+
+Using this function, we can use it like so:
+
+#+BEGIN_SRC text
+(aocel-solve 2024 1 #'solution)
+#+END_SRC
+
+This should something display like this:
+
+#+BEGIN_SRC text
+88721   27093
+82358   83161
+45486   51031
+61135   70681
+25501   16321
+12221   62619
+98976   89121
+83483   36480
+24673   41710
+36211   39233
+65135   61232
+64780   43227
+;; ...
+;; Result truncated
+#+END_SRC
+
+Nice, so now we just need to split each side of this input into two lists, and sort them.
+Once they are sorted, we can then get the absolute difference between each element and
+sum them all up. Here is the emacs-lisp implementing that solution:
+
+#+BEGIN_SRC text
+(defun solution (input)
+  "The solution to the problem of year 2024 day 1."
+  (let ((p (split-string input "\n")))
+    (let ((a nil)
+          (b nil)
+          (sum 0))
+      (cl-mapc (lambda (x)
+                 (let* ((p (split-string x))
+                        (fst (string-to-number
+                              (elt p 0)))
+                        (snd (string-to-number
+                              (elt p 1))))
+                   (push fst a)
+                   (push snd b))) p)
+      (cl-reduce #'+ (cl-mapcar
+                      (lambda (x y)
+                        (abs (- x y)))
+                      (sort a) (sort b))))))
+#+END_SRC
+
+Finally, calling this function like so, yields us with our answer that we can submit:
+#+BEGIN_SRC text
+(aocel-solve 2024 1 #'solution) => 1223326
+#+END_SRC
+
+* TODO An Emacs package for Bevy - 'brpel.el'
+:PROPERTIES:
+:EXPORT_AUTHOR: yelobat
+:EXPORT_FILE_NAME: brpel-emacs-package
+:EXPORT_DATE: 2025-09-28
+:EXPORT_OPTIONS: toc:t
+:END:
+
+** Introduction
+
+It has been a goal of mine for a long time to create an animation tool that is
+controllable via Emacs. I greatly appreciate some of the animations you see for
+various explanatory math channels, [[https://www.youtube.com/@3blue1brown][3b1b]] in particular stands out to me and really
+inspired me to start this journey.
+
+However, although many tools exist, I wanted this animation tool to be
+specifically controllable via Emacs, using Emacs Lisp, and then as an additional
+goal, to be easily extensible to use any language that is required.
+
+I was not apposed to use an existing piece of technology, as long as it provided
+me with enough control to define the animation style easily, I didn't want to be
+restricted to just a single style or even a particular language.
+
+So the goal is this: A completely customization animation engine, that is controllable
+and scriptable with any language.
+
+** My first attempt
+
+I initially attempted to write a custom engine with C + Vulkan, which had
+actually taken me around 3+ years to get to a usable state. This was written
+during my first, second, and third years at university and at this stage, I was
+experienced with C, but not an experienced graphics programmer at all. Hence,
+the engine was extremely poorly written if I am being truly honest.
+
+I played around with it, and I felt that something was missing, I wasn't proud of
+it and quite simply, I decided to take a break from this project.
+
+** Bevy
+
+After a long time of working on other personal projects and playing Video Games,
+I decided to pick up a new language, and that language is called [[https://rust-lang.org/][Rust]].
+
+I had heard a lot of negative rhetoric around Rust, and hence kept away from it
+for a long time, a lot of drama around Rust being the replacement for C, and even
+how it could never surpass C's superior performance. Regardless, I decided to try
+it out.
+
+Rust is a great language. I do believe that true beauty occurs when you tear it
+down and build it back up again. Many great things from life have come from this
+very fact. After the tear-down, we can utilize all of the wisdom that we have learnt
+leading up to this point and I believe that Rust may be the summation of all that
+wisdom.
+
+When learning Rust, I wondered as to how I could rewrite the animation engine in it to
+approach it in a different way, but then I came across [[https://bevy.org/][Bevy]]. Now, Bevy is a game
+engine, not an animation engine, so how do this solve my problem?
+
+A game engine however is not just useful for games, I believe that for my
+particular situation a game engine has an overlap of abilities that an animation
+engine would need for my particular case. It needs to be able to render things
+and to determine where those things are, what properties they have at a
+particular moment in time, this is something a game engine is familiar with and
+should have functions for handling.
+
+To me, this sounded great, and it cuts a lot of the time involved in building the engine
+from scratch again, but what truly sold me was the 'bevy_remote' plugin that comes with
+the engine.
+
+*** Bevy Remote
+
+The 'bevy_remote' plugin provides a bevy-based application to receive commands from
+an external process and it will process those commands accordingly. This was insane to
+me, it's exactly what I've been looking for and building since 2022.
+
+How does this work? I decided to write a package called [[https://github.com/yelobat/brpel][brpel.el]] to better understand how
+this plugin works.
+
+** brpel.el
+
+This package simply implements a basic JSON-RPC client over HTTP and provides functions to
+send the particular commands to the JSON-RPC server hosted by the 'bevy_remote' plugin.
+
+Here is an example using this package:
+
+#+BEGIN_SRC text
+(brpel-insert-resource
+ "bevy_render::camera::clear_color::ClearColor"
+ `((Srgba .
+    ((red . 0.0)
+     (green . 0.0)
+     (blue . 0.0)
+     (alpha . 1.0)))))
+#+END_SRC
+
+and this example, for a bevy-based application using the bevy remote protocol plugin
+will turn the background clear colo(u)r to be black. This is a simple thing, but surely
+that's not all it can do right?
+
+Let's look at some other examples, and then later, we will look at implementing
+some custom commands.
+
+*** brpel-list-resources
+
+This is a very useful function and very simple to call:
+
+#+BEGIN_SRC text
+(brpel-list-resources)
+#+END_SRC
+
+If you take a look at the signature of the 'brpel-list-resources' function
+it has an optional argument called 'callback'. If not provided, it will default
+to displaying the JSON result as a message. If you want more control, like to place
+ther result in a variable, you could do something like this instead:
+
+#+BEGIN_SRC text
+(setq result nil)
+(brpel-list-resources (lambda (res)
+                        (setq result (cdr (elt res 2)))
+                        (message "Done.")))
+#+END_SRC
+
+Now 'result' is a variable that will now hold the list of resources that are
+currently registered in the running bevy application. An example 'result' value
+for this function call would be:
+
+#+BEGIN_SRC text
+[
+ "bevy_audio::audio::DefaultSpatialScale",
+ "bevy_audio::volume::GlobalVolume",
+ "bevy_framepace::FramepaceSettings",
+ "bevy_gizmos::config::GizmoConfigStore",
+ "bevy_input::mouse::AccumulatedMouseMotion",
+ "bevy_input::mouse::AccumulatedMouseScroll",
+ "bevy_pbr::light::DirectionalLightShadowMap",
+ "bevy_pbr::light::PointLightShadowMap",
+ "bevy_pbr::light::ambient_light::AmbientLight",
+ "bevy_pbr::material::DefaultOpaqueRendererMethod",
+ "bevy_picking::PickingPlugin",
+ "bevy_picking::input::PointerInputPlugin",
+ ...
+ ]
+#+END_SRC
+
+Now that we have this, let's say we had a some entities in our application that have Text2d
+components attached to them and that we want to query them for their Entity IDs, we can use the
+brpel-query function for this.
+
+*** brpel-query
+
+This function's default calling is expected to be as follows:
+#+BEGIN_SRC text
+(brpel-query
+`(
+  (components . [])
+  (option . [])
+  (has . [])
+)
+`(
+  (with . [])
+  (without . [])))
+#+END_SRC
+
+Now this will just query all the entities currently inside of your application. Let's now specify
+what components we want to specifically filter on, in our case, it is Text2d components:
+#+BEGIN_SRC text
+(brpel-query
+ `(
+   (components . ["bevy_text::text2d::Text2d"])
+   (option . [])
+   (has . [])
+   )
+ `(
+   (with . [])
+   (without . [])))
+#+END_SRC
+
+If you want to now extract all the IDs from the response, we can override the
+'callback' function to get something like this:
+
+#+BEGIN_SRC text
+(setq result nil)
+(brpel-query
+ `(
+   (components . [])
+   (option . [])
+   (has . [])
+   )
+ `(
+   (with . ["bevy_text::text2d::Text2d"])
+   (without . [])
+   )
+ nil
+ (lambda (x)
+   (setq result
+         (mapcar (lambda (x) (cdr (car (cdr x))))
+                 (cdr (elt x 2))))))
+#+END_SRC
+
+This will give all of the entity IDs that have a Text2d component attached to them!
+
+Now let's operate on the Text2d component of the collected entities!
+
+*** brpel-mutate-component
+
+This function is also simple to call, you can call it as follows:
+
+#+BEGIN_SRC text
+(brpel-mutate-component
+ (elt result 0)
+ "bevy_text::text2d::Text2d"
+ "0"
+ "Hi There from brpel!")
+#+END_SRC
+
+This will take the Text2d component of the first entity in the list of entities that you
+obtained from the previous calls, and change it's value to say "Hi There from brpel!".
+
+It can be used for other stuff too, let's say the entity also has a transform component,
+you can move it around the screen like this:
+
+#+BEGIN_SRC text
+(brpel-mutate-component
+ (elt result 0)
+ "bevy_transform::components::transform::Transform"
+ "translation"
+ [0.0 0.0 0.0])
+#+END_SRC
+
+Which will translate the component to the center of the screen.
+
+*** brpel-mutate-resource
+
+This function is similar to 'brpel-mutate-component' but only operates on resources.
+Here is a quick example of how to use this function:
+
+#+BEGIN_SRC text
+(brpel-mutate-resource
+ "bevy_render::camera::clear_color::ClearColor" "0"
+ `((Srgba .
+    ((red . 0.0)
+     (green . 0.0)
+     (blue . 0.0)
+     (alpha . 1.0)))))
+#+END_SRC
+
+This is an alternative way to change the background colo(u)r.
