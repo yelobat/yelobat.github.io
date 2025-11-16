@@ -30,4 +30,4 @@
         dir = ':cacheDir/images'
 
 [params]
-    mathjax = true
+    katex = true

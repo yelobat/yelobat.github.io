@@ -1,0 +1,118 @@
+#+hugo_base_dir: ../
+#+hugo_tags: algorithms rust
+
+* DONE cses.fi - Weird Algorithm
+:PROPERTIES:
+:EXPORT_AUTHOR: yelobat
+:EXPORT_FILE_NAME: cses-fi-weird-algorithm
+:EXPORT_DATE: 2025-09-28
+:EXPORT_OPTIONS: toc:t
+:END:
+
+#+BEGIN_EXPORT md
+{{< katex >}}
+#+END_EXPORT
+
+Welcome to a series that I have wanted to start for quite some time now. A
+series that goes through all of the problems on cses.fi! This series will also
+extend into solving some problems on other sites too such as those found on
+codeforces and atcoder.
+
+** What is cses.fi
+
+CSES stands for Code Submission Evaluation System, and cses.fi is a site
+that provides a CSES for algorithm programming problems. They are a good
+way to test your problem solving skills, but also a nice way to learn a
+new language.
+
+** Language of choice
+
+In this series, I will be using the Rust programming language. I have been using
+this language a lot recently and have really enjoyed it so far. So, to better
+understand it and challenge my knowledge of the language, I thought it would be
+fun to try out some good-old algorithm problems.
+
+** The problem
+
+So, the first problem:
+
+"Consider an algorithm that takes as input a positive integer $n$. If $n$ is even,
+the algorithm divides it by two, and if $n$ is odd, the algorithm multiplies it by
+three and adds one. The algorithm repeats this, until $n$ is one. For example, the sequence
+for $n = 3$ is as follows:
+
+\begin{align}
+3 \to 10 \to 5 \to 16 \to 8 \to 4 \to 2 \to 1
+\end{align}
+
+Your task is to simulate the execution of the algorithm for a given value of $n$."
+
+That sounds easy enough. Let's implement it:
+
+#+BEGIN_SRC rust
+use std::io;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+    let mut n: u32 = input
+        .trim()
+        .parse()
+        .expect("The input was not a valid number");
+
+    'forever: loop {
+        print!("{} ", n);
+        match n {
+            1 => break 'forever,
+            _ if n % 2 == 0 => n /= 2,
+            _ => n = 3 * n + 1,
+        }
+     }
+}
+#+END_SRC
+
+Now let's submit that ... It doesn't work. You may have noticed this before I
+did, but there is a possibility for an overflow in the 32-bit number that we are
+using for $n$. Hence an input like $159487$ causes the code to panic with a
+'multiply with overflow' error. This is good since Rust told us what went wrong,
+so let's fix it, which is quite a simple fix:
+
+#+BEGIN_SRC rust
+use std::io;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+    let mut n: u64 = input /* <--- Changed from u32 to u64 */
+        .trim()
+        .parse()
+        .expect("The input was not a valid number");
+
+    'forever: loop {
+        print!("{} ", n);
+        match n {
+            1 => break 'forever,
+            _ if n % 2 == 0 => n /= 2,
+            _ => n = 3 * n + 1,
+        }
+     }
+}
+#+END_SRC
+
+All we had to do to fix this error was to change the $n$'s type to be a u64
+instead of a u32. This gives it 32 extra bits to work with, and hence an overflow
+will not occur when the code runs on the provided inputs.
+
+Let's submit this solution now ... And it worked!
+
+** The lesson
+The lesson to learn here is that you should definitely test your code before
+sending it into the real world. This edge-case could have been found by writing
+a script to send very large numbers into our input, identifying the crash before
+it happened during the submission.
+
+Next, we will take a look at the next problem to "Missing Number".
