@@ -17,7 +17,7 @@ title = "Dashboard"
  [params.author]
    name = "yelobat"
    email = "lukeanthonyholland@gmail.com"
-   image = "profile.png"
+   image = "logo.png"
    imageQuality = 96
    headline = "Emacs | C | Rust | Graphics | Game Development"
    bio = "Emacs, competitive programming, graphics, programming languages, and game development."
