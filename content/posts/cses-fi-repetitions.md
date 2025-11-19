@@ -102,5 +102,9 @@ fn main() {
 ```
 
 The logic is the same as we described above, and passes all of the test cases on cses.fi.
-The code may seem unclear with why there is a mysterious variable called \\(f\\) and why it
-is initialized with the ? character.
+The code may seem unclear with why there is a mysterious variable called \\(f\\), and why it
+is initialised with the ? character.
+
+The reason for this is that we need a way to compare the first letter we come across in
+the string with something that isn't a letter that could appear, so I decided to choose "?",
+since it represents some level of being "undefined".
