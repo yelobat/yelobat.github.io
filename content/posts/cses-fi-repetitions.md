@@ -1,0 +1,106 @@
++++
+title = "cses.fi - Repetitions"
+author = ["yelobat"]
+date = 2025-11-18
+tags = ["algorithms", "rust"]
+draft = false
++++
+
+<div class="ox-hugo-toc toc">
+
+<div class="heading">Table of Contents</div>
+
+- [Introduction](#introduction)
+- [The problem](#the-problem)
+
+</div>
+<!--endtoc-->
+
+{{< katex >}}
+
+
+## Introduction {#introduction}
+
+Welcome back to the series on the cses.fi problem set. If you are new, check out
+some of the previous problems covered [here](/posts/cses-fi-missing-number).
+
+
+## The problem {#the-problem}
+
+"You are given a DNS sequence: a string consisting of characters A, C, G, and T.
+Your task is to find the longest repetition in the sequence. This is a
+maximum-length substring containing only one type of character."
+
+Okay, let's break this down into something more digestible and something we can turn
+into code. An example is provided on the site, let's analyse to see how we can
+formulate our solution:
+
+\begin{align}
+\text{ATTCGGGA}
+\end{align}
+
+Currently, we don't have any knowledge of a maximum-length substring, let's store this
+value in a variable called \\(L\\), and let \\(L = 0\\) at the start of the algorithm, which
+represents that we currently have no knowledge of such a maximum-length substring, yet.
+
+Let's now iterate over the input string and keep track of the current letter in our substring
+and keep track of how many times this letter occurs in this substring:
+
+\begin{align}
+\text{\underline{A}TTCGGGA} \\\\
+\text{\underline{AT}TCGGGA}
+\end{align}
+
+Oops, \\(\text{A} \neq \text{T}\\), and we only came across a single A in this substring, so our
+maximum-length substring that we have seen so far has a length of one, so \\(L = 1\\), let's continue
+with our current substring containing only T:
+
+\begin{align}
+\text{A\underline{T}TCGGGA} \\\\
+\text{A\underline{TT}CGGGA} \\\\
+\text{A\underline{TTC}GGGA} \\\\
+\end{align}
+
+Again, we have \\(\text{T} \neq \text{C}\\), but this time we came across two T's, now since \\(2 > L\\),
+we set \\(L = \text{max(2, L)} = 2\\).
+
+Hopefully you get the pattern, we continue this throughout the entire sequence,
+until we have completed our scan of the entire input string.
+
+Eventually, for this input we find that the maximum-length substring is \\(3\\)
+because we have \\(3\\) copies of the letter G all next to each other, and no other
+sequence of continuous characters appears greater than this.
+
+Here is the solution:
+
+```rust
+use std::{cmp::max, io};
+
+fn main() {
+    let mut l: u32 = 0;
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+
+    let str = input.trim();
+    let mut f = '?';
+    let mut cl = 0;
+    for c in str.chars() {
+        if c != f {
+            l = max(l, cl);
+            cl = 1;
+            f = c;
+        } else {
+            cl += 1;
+        }
+    }
+
+    l = max(l, cl);
+    println!("{}", l);
+}
+```
+
+The logic is the same as we described above, and passes all of the test cases on cses.fi.
+The code may seem unclear with why there is a mysterious variable called \\(f\\) and why it
+is initialized with the ? character.
