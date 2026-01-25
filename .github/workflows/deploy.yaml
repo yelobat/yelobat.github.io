@@ -34,13 +34,13 @@ jobs:
         with:
           path: "build/"
 
-deploy:
-  needs: build_site
-  runs-on: ubuntu-latest
-  environment:
-    name: github-pages
-    url: ${{ steps.deployment.outputs.page_url }}
-  steps:
-    - name: Deploy
-      id: deployment
-      uses: actions/deploy-pages@v4
+  deploy:
+    needs: build_site
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+      steps:
+        - name: Deploy
+          id: deployment
+          uses: actions/deploy-pages@v4
