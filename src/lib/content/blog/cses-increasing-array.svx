@@ -1,0 +1,86 @@
+---
+title: "cses.fi - Increasing Array."
+date: "2025-11-19"
+type: "Competitive Programming"
+status: "Completed"
+description: "Solving the 'Increasing Array' problem on cses.fi."
+tech: ["Rust", "Competitive Programming", "Data Structures", "Algorithms"]
+---
+
+<hr/>
+
+# Introduction
+
+Welcome again to the series on the [cses.fi](https://cses.fi) problem set. Let's get right into our next
+problem: [Increasing Array](https://cses.fi/problemset/task/1094).
+
+## The Problem
+
+> You are given an array of $N$ integers. You want to modify the array so that it is
+> increasing, i.e., every element is at least as large as the previous element.
+> On each move, you may increase the value of any element by one. What is the minimum
+> number of moves required?
+
+The most important part of this description is the following:
+
+> Every element is at least as large as the previous element.
+
+So if we have the following array:
+
+$$
+[3, 1]
+$$
+
+The minimum number of moves would be $2$ because we only have to increase it to at least as
+large as the previous element, which is $3$, and $3 - 1 = 2$.
+
+<br/>
+
+Let's implement this:
+
+```rust
+use std::io;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+    let _n: u64 = input
+        .trim()
+        .parse()
+        .expect("The input was not a valid number");
+
+    input.clear();
+
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+
+    let v: Vec<u64> = input
+        .split(" ")
+        .filter(|&s| s != " ")
+        .map(|s| s.trim().parse().unwrap())
+        .collect();
+
+    let mut prev: u64 = v[0];
+    let mut ans: u64 = 0;
+    for v in v.iter() {
+        if v < &prev {
+            ans += prev - *v;
+        } else {
+            prev = *v;
+        }
+    }
+    println!("{}", ans);
+}
+```
+
+And that's the solution! You will notice that at first the first problems on
+[cses.fi](https://cses.fi) are pretty intuitive, but of course, the difficulty will
+increase and the explanations will become more and more intricate as we go on.
+
+<br/>
+
+Stay tuned for these harder and more interesting problems, and for our next problem:
+[Permutations](https://cses.fi/problemset/task/1070).

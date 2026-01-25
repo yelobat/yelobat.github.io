@@ -1,0 +1,13 @@
+---
+title: "bevy_m8"
+date: "2026-01-01"
+type: "Bevy"
+status: "Completed"
+description: "Implementing a Bevy-based client for the Dirtywave M8."
+tech: ["Rust", "Bevy", "Dirtywave M8", "Music"]
+version: "0.1.0"
+---
+
+<hr/>
+
+# What is a Dirtywave M8?

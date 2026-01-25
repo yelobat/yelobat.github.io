@@ -1,0 +1,19 @@
+@import 'tailwindcss';
+
+:root {
+    --yellow: #F3E991;
+    --red: #FF5C3D;
+    --cream: #F9F7F2;
+    --ink: #1A1A1A;
+}
+
+body {
+    background-color: var(--cream);
+    color: var(--ink);
+    line-height: 1.4;
+}
+
+::selection {
+    background: var(--red);
+    color: white;
+}

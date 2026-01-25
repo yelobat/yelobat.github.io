@@ -1,0 +1,119 @@
+---
+title: "cses.fi - Permutations."
+date: "2025-11-20"
+type: "Competitive Programming"
+status: "Completed"
+description: "Solving the 'Permutations' problem on cses.fi."
+tech: ["Rust", "Competitive Programming", "Data Structures", "Algorithms"]
+---
+
+<hr/>
+
+# Introduction
+
+Welcome to the series once again,today we are going to look at our next problem:
+[Permutations](https://cses.fi/problemset/task/1070).
+
+## The Problem
+
+> A permutation of integers $1, 2, ..., N$ is called beautiful if there are no
+> adjacent elements whose difference is $1$.
+> Given $N$, construct a beautiful permutation if such a permutation exists.
+
+Okay, so for these types of problems, it's important to break it down by verifying
+test cases manually to see if you can identify some kind of exploitable pattern
+which can be easily programmed. Let's go from $1, 2, ...$ and so on to see if there
+is a pattern:
+
+<br/>
+
+### If $n = 1$ (one solution)
+
+$$
+[1]
+$$
+
+### If $n = 2$ (no solutions)
+
+$$
+[1, 2] \\
+[2, 1]
+$$
+
+### If $n = 3$ (no solutions)
+
+$$
+[1, 2, 3] \\
+[1, 3, 2] \\
+[2, 1, 3] \\
+[2, 3, 1] \\
+[3, 2, 1] \\
+[3, 1, 2]
+$$
+
+### Discovering a pattern
+
+So far, there are only solutions for when $N = 1$. Let's take a look at the $N =
+4$ and see if the trend starts to appear:
+
+$$
+[2, 4, 1, 3] \leftarrow \text{A SOLUTION}
+$$
+
+If you think about it, for all even $N$, we have a solution that follows the
+following format:
+
+$$
+[2, 4, 6, 8, ..., N, 1, 3, 5, 7, ..., N - 1]
+$$
+
+The only problem is if $N - 1 = 1$, but solving this proves that this only has a
+solution is $N = 2$, which we showed earlier.
+
+<br/>
+
+So, does a pattern exist for odd $N$? Yes, the pattern applies:
+$$
+[2, 4, 6, 8, ..., N - 1, 1, 3, 5, 7, ..., N]
+$$
+
+We need to assure that $(N - 1) - 1 = 1$ is not satisfied, and this only happens when $N = 3$,
+which we also showed has no solutions already.
+
+<br/>
+
+Now that we know the patterns and proved that they work, we have that there exists only solutions
+for all $N \notin \{2, 3\}$.
+
+<br/>
+
+## The Solution
+
+Let's implement this:
+
+```rust
+use std::io;
+
+fn main() {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read a line");
+    let n: u64 = input
+        .trim()
+        .parse()
+        .expect("The input was not a valid number");
+
+    if [2, 3].contains(&n) {
+        println!("NO SOLUTION");
+    } else {
+        (2..=n).step_by(2).for_each(|v| print!("{v} "));
+        (1..=n).step_by(2).for_each(|v| print!("{v} "));
+        println!();
+    }
+}
+```
+
+And that's all. It basically prints all of the even numbers in the range $[2, N]$, and then
+all of the odd numbers in the range $[1, N]$. Which is the pattern we found previously to
+satisify the problem requirements.
