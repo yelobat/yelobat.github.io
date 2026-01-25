@@ -15,7 +15,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
         paths: {
-            base: process.env.NODE_ENV === "production" ? "/yelobat.github.io": "",
+            base: "",
         }
 	},
 
