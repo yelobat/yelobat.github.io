@@ -10,3 +10,6 @@ export async function load() {
 
   return { items };
 }
+
+export const prerender = true;
+export const trailingSlash = "always";
