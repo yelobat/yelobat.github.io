@@ -18,7 +18,7 @@ series that goes through all of the problems on [cses.fi](https://cses.fi)!
 
 If you are new here, I am working my way through all of the problems in the
 order they are presented on the site, so you can go back to see the solution to
-the [weird algorthm](./cses-weird-algorithm) problem.
+the [weird algorthm](../cses-weird-algorithm) problem.
 
 ## The Problem
 
@@ -165,7 +165,7 @@ $$
 $$
 
 We preferably want to avoid the problem we faced when solving the first problem
-[weird algorthm](./cses-weird-algorithm) where we used `u32` instead
+[weird algorthm](../cses-weird-algorithm) where we used `u32` instead
 of `u64`, which resulted in an overflow in our chosen type.
 
 <br/>

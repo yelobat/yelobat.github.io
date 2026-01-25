@@ -12,7 +12,7 @@ tech: ["Rust", "Competitive Programming", "Data Structures", "Algorithms"]
 # Introduction
 
 Welcome back to the series on the cses.fi problem set. If you are new, check out
-the previous problem covered here: [Missing Number](./cses-missing-number).
+the previous problem covered here: [Missing Number](../cses-missing-number).
 
 ## The Problem
 
