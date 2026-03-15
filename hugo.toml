@@ -1,0 +1,14 @@
+baseURL = 'http://localhost/'
+languageCode = 'en-us'
+title = "yelobat's Homepage"
+theme = 'nostyleplease'
+
+[markup.goldmark.renderer]
+    unsafe = true
+
+[caches]
+    [caches.images]
+        dir = ":cacheDir/images"
+
+[params]
+    mathjax = true
