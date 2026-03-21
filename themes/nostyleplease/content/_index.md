@@ -12,7 +12,7 @@ draft = false
 <hr/>
 
 This is my personal site for discussing personal projects and things I find
-interesting. This includes subjects like (but not limited to): C, Guile Scheme, Emacs,
-Linux, Game Development, Art, and Music.
+interesting. This includes subjects like (but not limited to): C, Rust, Bevy,
+Guile Scheme, Emacs, Linux, Game Development, Art, and Music.
 
 
